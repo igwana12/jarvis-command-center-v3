@@ -1,0 +1,139 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+*.log
+
+# Virtual Environment
+bin/
+include/
+pip-selfcheck.json
+pyvenv.cfg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Sensitive files
+api_keys.json
+wallet.json
+*.key
+*.pem
+secrets/
+credentials.json
+encrypted_keys.json
+
+# Database
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+knowledge_base.db
+jarvis.db
+
+# Cache
+.cache/
+*.cache
+__cache__/
+redis_cache/
+
+# Logs
+logs/
+*.log
+server.log
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Documentation
+docs/_build/
+
+# Node modules (if any frontend deps)
+node_modules/
+package-lock.json
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
+.vercel_build_output
+
+# Next.js (if used)
+.next/
+out/
+
+# Production
+/build
+/dist
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Session data
+sessions/
+*.session
+
+# Backups
+backup/
+backups/
+*.backup
+
+# Security scan results
+security_scan_results/
+
+# Test results
+test_results/

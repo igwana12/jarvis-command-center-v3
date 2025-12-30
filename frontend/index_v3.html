@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis Command Center V3 - Enhanced</title>
+    <meta name="description" content="Unified interface for Jarvis AI capabilities">
+
+    <!-- Security headers via meta tags -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:*; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+    <style>
+        /* CSS Variables for theming */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --border: #222222;
+            --accent: #0070f3;
+            --success: #0cce6b;
+            --warning: #ffa400;
+            --danger: #ff4400;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Accessibility: Skip link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Focus indicators for keyboard navigation */
+        *:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #00a8ff);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Command Bar - Improved */
+        .command-bar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .command-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .command-input-wrapper {
+            position: relative;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .command-input {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            min-height: 48px; /* Accessibility: min touch target */
+        }
+
+        .command-input:focus {
+            border-color: var(--accent);
+            background: var(--bg-primary);
+        }
+
+        .command-submit {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 1.5rem;
+            min-width: 120px;
+            min-height: 48px; /* Accessibility: min touch target */
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .command-submit:hover:not(:disabled) {
+            background: #0060d3;
+            transform: translateY(-1px);
+        }
+
+        .command-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Quick Actions - Improved */
+        .quick-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-action {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-height: 44px; /* Accessibility: min touch target */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-action:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        /* Tabs - Improved with ARIA */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            position: relative;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Scroll indicators */
+        .tabs::before,
+        .tabs::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tabs::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg-primary), transparent);
+        }
+
+        .tabs::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg-primary), transparent);
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            min-height: 48px; /* Accessibility */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-badge {
+            background: var(--bg-tertiary);
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Grid - Improved */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Cards - Accessible */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::before,
+        .card:focus::before {
+            opacity: 0.05;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .card-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .card-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 0.75rem;
+            position: relative;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        /* Skeleton loaders */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--bg-tertiary) 25%,
+                var(--bg-secondary) 50%,
+                var(--bg-tertiary) 75%
+            );
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-card {
+            height: 140px;
+            border-radius: 12px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .status-indicator {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .command-bar {
+                padding: 1rem;
+            }
+
+            .command-input-wrapper {
+                flex-direction: column;
+            }
+
+            .command-submit {
+                width: 100%;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toast {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+        }
+
+        /* Accessibility: Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon" aria-hidden="true">J</div>
+                <h1 class="logo-text">Jarvis Command Center V3</h1>
+            </div>
+            <div class="status-indicator" role="status" aria-live="polite">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span id="status-text">Initializing...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container" role="main">
+        <!-- Command Bar -->
+        <section class="command-bar" aria-label="Command input">
+            <label for="command-input" class="command-label">
+                Enter natural language command or press ⌘K for command palette
+            </label>
+            <div class="command-input-wrapper">
+                <input
+                    type="text"
+                    id="command-input"
+                    class="command-input"
+                    placeholder="Ask Jarvis anything..."
+                    aria-label="Command input"
+                    autocomplete="off"
+                />
+                <button
+                    id="command-submit"
+                    class="command-submit"
+                    aria-label="Execute command"
+                >
+                    <span id="submit-text">Execute</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions" aria-label="Quick actions">
+            <button class="quick-action" onclick="executeCommand('analyze recent videos')">
+                📹 Analyze Videos
+            </button>
+            <button class="quick-action" onclick="executeCommand('run performance analysis')">
+                ⚡ Performance Check
+            </button>
+            <button class="quick-action" onclick="executeCommand('trigger master workflow')">
+                🔄 Run Workflow
+            </button>
+            <button class="quick-action" onclick="loadAllResources()">
+                🔄 Refresh All
+            </button>
+        </section>
+
+        <!-- Tabs -->
+        <nav class="tabs" role="tablist" aria-label="Resource categories">
+            <button
+                class="tab active"
+                role="tab"
+                aria-selected="true"
+                aria-controls="agents-panel"
+                data-tab="agents"
+                onclick="switchTab('agents')"
+            >
+                Agents <span class="tab-badge" id="agents-count">0</span>
+            </button>
+            <button
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="commands-panel"
+                data-tab="commands"
+                onclick="switchTab('commands')"
+            >
+                Commands <span class="tab-badge" id="commands-count">0</span>
+            </button>
+            <button
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="skills-panel"
+                data-tab="skills"
+                onclick="switchTab('skills')"
+            >
+                Skills <span class="tab-badge" id="skills-count">0</span>
+            </button>
+            <button
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="mcp-panel"
+                data-tab="mcp"
+                onclick="switchTab('mcp')"
+            >
+                MCP <span class="tab-badge" id="mcp-count">0</span>
+            </button>
+            <button
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="workflows-panel"
+                data-tab="workflows"
+                onclick="switchTab('workflows')"
+            >
+                Workflows <span class="tab-badge" id="workflows-count">0</span>
+            </button>
+            <button
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="monitor-panel"
+                data-tab="monitor"
+                onclick="switchTab('monitor')"
+            >
+                Monitor
+            </button>
+        </nav>
+
+        <!-- Tab Content Panels -->
+        <section id="agents-panel" role="tabpanel" class="tab-content active" aria-labelledby="agents-tab">
+            <div id="agents-grid" class="grid">
+                <!-- Loading skeletons -->
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            </div>
+        </section>
+
+        <section id="commands-panel" role="tabpanel" class="tab-content" aria-labelledby="commands-tab">
+            <div id="commands-grid" class="grid"></div>
+        </section>
+
+        <section id="skills-panel" role="tabpanel" class="tab-content" aria-labelledby="skills-tab">
+            <div id="skills-grid" class="grid"></div>
+        </section>
+
+        <section id="mcp-panel" role="tabpanel" class="tab-content" aria-labelledby="mcp-tab">
+            <div id="mcp-grid" class="grid"></div>
+        </section>
+
+        <section id="workflows-panel" role="tabpanel" class="tab-content" aria-labelledby="workflows-tab">
+            <div id="workflows-grid" class="grid"></div>
+        </section>
+
+        <section id="monitor-panel" role="tabpanel" class="tab-content" aria-labelledby="monitor-tab">
+            <div id="monitor-grid" class="grid"></div>
+        </section>
+    </main>
+
+    <script>
+        // Configuration
+        const API_BASE = 'http://localhost:8000';
+        let ws = null;
+        let allResources = {};
+        let isLoading = false;
+
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'polite');
+
+            document.body.appendChild(toast);
+
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 100);
+
+            // Remove after 3s
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Create accessible card
+        function createCard({ title, description, badge, onclick }) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `${title}: ${description}`);
+
+            const titleEl = document.createElement('div');
+            titleEl.className = 'card-title';
+            titleEl.textContent = title;
+
+            const descEl = document.createElement('div');
+            descEl.className = 'card-description';
+            descEl.textContent = description;
+
+            card.appendChild(titleEl);
+            card.appendChild(descEl);
+
+            if (badge) {
+                const badgeEl = document.createElement('span');
+                badgeEl.className = 'card-badge';
+                badgeEl.textContent = badge;
+                card.appendChild(badgeEl);
+            }
+
+            if (onclick) {
+                card.onclick = onclick;
+                card.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onclick();
+                    }
+                };
+            }
+
+            return card;
+        }
+
+        // Tab switching with ARIA
+        function switchTab(tabName) {
+            // Update tab states
+            document.querySelectorAll('.tab').forEach(tab => {
+                const isActive = tab.dataset.tab === tabName;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive);
+            });
+
+            // Update content panels
+            document.querySelectorAll('.tab-content').forEach(content => {
+                const isActive = content.id === `${tabName}-panel`;
+                content.classList.toggle('active', isActive);
+            });
+
+            // Load content if needed
+            const loader = {
+                agents: loadAgents,
+                commands: loadCommands,
+                skills: loadSkills,
+                mcp: loadMCPServers,
+                workflows: loadWorkflows,
+                monitor: loadMonitorData
+            }[tabName];
+
+            if (loader) loader();
+        }
+
+        // Load agents with loading state
+        async function loadAgents() {
+            const grid = document.getElementById('agents-grid');
+
+            try {
+                const response = await fetch(`${API_BASE}/agents`);
+                const agents = await response.json();
+
+                grid.innerHTML = '';
+                allResources.agents = agents;
+
+                Object.entries(agents).forEach(([name, description]) => {
+                    const card = createCard({
+                        title: name.replace(/-/g, ' '),
+                        description: description,
+                        badge: 'Agent',
+                        onclick: () => executeAgent(name)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('agents-count').textContent = Object.keys(agents).length;
+            } catch (error) {
+                showToast('Failed to load agents', 'error');
+            }
+        }
+
+        // Load commands
+        async function loadCommands() {
+            const grid = document.getElementById('commands-grid');
+
+            try {
+                const response = await fetch(`${API_BASE}/commands`);
+                const commands = await response.json();
+
+                grid.innerHTML = '';
+                allResources.commands = commands;
+
+                Object.entries(commands).forEach(([name, info]) => {
+                    const card = createCard({
+                        title: name,
+                        description: info.description || 'No description',
+                        badge: 'Command',
+                        onclick: () => executeCommand(name)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('commands-count').textContent = Object.keys(commands).length;
+            } catch (error) {
+                showToast('Failed to load commands', 'error');
+            }
+        }
+
+        // Load skills
+        async function loadSkills() {
+            const grid = document.getElementById('skills-grid');
+
+            try {
+                const response = await fetch(`${API_BASE}/skills`);
+                const skills = await response.json();
+
+                grid.innerHTML = '';
+                allResources.skills = skills;
+
+                Object.entries(skills).forEach(([name, info]) => {
+                    const card = createCard({
+                        title: name.replace(/_/g, ' '),
+                        description: info.description || 'Skill',
+                        badge: 'Skill',
+                        onclick: () => viewSkill(name)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('skills-count').textContent = Object.keys(skills).length;
+            } catch (error) {
+                showToast('Failed to load skills', 'error');
+            }
+        }
+
+        // Load MCP servers
+        async function loadMCPServers() {
+            const grid = document.getElementById('mcp-grid');
+
+            try {
+                const response = await fetch(`${API_BASE}/mcp-servers`);
+                const servers = await response.json();
+
+                grid.innerHTML = '';
+                allResources.mcp = servers;
+
+                Object.entries(servers).forEach(([name, description]) => {
+                    const card = createCard({
+                        title: name,
+                        description: description,
+                        badge: 'MCP Server',
+                        onclick: () => showToast(`MCP Server: ${name}`, 'info')
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('mcp-count').textContent = Object.keys(servers).length;
+            } catch (error) {
+                showToast('Failed to load MCP servers', 'error');
+            }
+        }
+
+        // Load workflows
+        async function loadWorkflows() {
+            const grid = document.getElementById('workflows-grid');
+
+            try {
+                const response = await fetch(`${API_BASE}/workflows`);
+                const workflows = await response.json();
+
+                grid.innerHTML = '';
+                allResources.workflows = workflows;
+
+                workflows.forEach(workflow => {
+                    const card = createCard({
+                        title: workflow.name,
+                        description: `ID: ${workflow.id}`,
+                        badge: 'Workflow',
+                        onclick: () => triggerWorkflow(workflow.id)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('workflows-count').textContent = workflows.length;
+            } catch (error) {
+                showToast('Failed to load workflows', 'error');
+            }
+        }
+
+        // Load monitoring data
+        async function loadMonitorData() {
+            const grid = document.getElementById('monitor-grid');
+
+            try {
+                // Load multiple endpoints in parallel
+                const [processes, metrics, costs] = await Promise.all([
+                    fetch(`${API_BASE}/processes`).then(r => r.json()),
+                    fetch(`${API_BASE}/api/metrics/history`).then(r => r.json()),
+                    fetch(`${API_BASE}/api/costs/current`).then(r => r.json())
+                ]);
+
+                grid.innerHTML = '';
+
+                // Process card
+                const processCard = createCard({
+                    title: 'Top Processes',
+                    description: `${processes.length} active processes`,
+                    badge: 'Live'
+                });
+
+                // Metrics card
+                const metricsCard = createCard({
+                    title: 'System Metrics',
+                    description: `CPU: ${metrics.summary.avg_cpu}% | Memory: ${metrics.summary.avg_memory}%`,
+                    badge: 'Performance'
+                });
+
+                // Costs card
+                const costsCard = createCard({
+                    title: 'Monthly Costs',
+                    description: `$${costs.current_month.estimated_cost} (${costs.budget.usage_percentage}% of budget)`,
+                    badge: 'Budget'
+                });
+
+                grid.appendChild(processCard);
+                grid.appendChild(metricsCard);
+                grid.appendChild(costsCard);
+
+            } catch (error) {
+                showToast('Failed to load monitoring data', 'error');
+            }
+        }
+
+        // Execute command with loading state
+        async function executeCommand(cmd) {
+            const command = cmd || document.getElementById('command-input').value;
+            if (!command) return;
+
+            const submitBtn = document.getElementById('command-submit');
+            const submitText = document.getElementById('submit-text');
+            const originalText = submitText.textContent;
+
+            // Loading state
+            submitBtn.disabled = true;
+            submitText.innerHTML = '';
+            const spinner = document.createElement('span');
+            spinner.className = 'spinner';
+            submitText.appendChild(spinner);
+            const text = document.createTextNode(' Running');
+            submitText.appendChild(text);
+
+            try {
+                const response = await fetch(`${API_BASE}/command`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command })
+                });
+                const result = await response.json();
+
+                // Success state
+                submitText.textContent = '✓ Success';
+                submitBtn.style.background = 'var(--success)';
+                showToast('Command executed successfully', 'success');
+
+                // Clear input
+                if (!cmd) {
+                    document.getElementById('command-input').value = '';
+                }
+
+                // Reset after 2s
+                setTimeout(() => {
+                    submitText.textContent = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = '';
+                }, 2000);
+
+            } catch (error) {
+                // Error state
+                submitText.textContent = '✗ Failed';
+                submitBtn.style.background = 'var(--danger)';
+                showToast(`Command failed: ${error.message}`, 'error');
+
+                setTimeout(() => {
+                    submitText.textContent = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = '';
+                }, 2000);
+            }
+        }
+
+        // Execute agent
+        async function executeAgent(agentName) {
+            showToast(`Executing agent: ${agentName}`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/agent/execute`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        agent: agentName,
+                        task: 'Execute from UI',
+                        parameters: {}
+                    })
+                });
+                const result = await response.json();
+                showToast(`Agent started: ${result.task_id}`, 'success');
+            } catch (error) {
+                showToast(`Failed to execute agent: ${error.message}`, 'error');
+            }
+        }
+
+        // Trigger workflow
+        async function triggerWorkflow(workflowId) {
+            showToast(`Triggering workflow: ${workflowId}`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/workflow/trigger`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        workflow_id: workflowId,
+                        parameters: {}
+                    })
+                });
+                const result = await response.json();
+                showToast(`Workflow triggered: ${result.execution_id}`, 'success');
+            } catch (error) {
+                showToast(`Failed to trigger workflow: ${error.message}`, 'error');
+            }
+        }
+
+        // View skill
+        function viewSkill(skillName) {
+            showToast(`Viewing skill: ${skillName}`, 'info');
+        }
+
+        // Load all resources
+        async function loadAllResources() {
+            if (isLoading) return;
+            isLoading = true;
+
+            showToast('Loading all resources...', 'info');
+
+            try {
+                await Promise.all([
+                    loadAgents(),
+                    loadCommands(),
+                    loadSkills(),
+                    loadMCPServers(),
+                    loadWorkflows()
+                ]);
+                showToast('All resources loaded', 'success');
+            } catch (error) {
+                showToast('Failed to load some resources', 'error');
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        // Setup WebSocket with reconnection
+        function setupWebSocket() {
+            const wsUrl = 'ws://localhost:8000/ws';
+
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = () => {
+                document.getElementById('status-text').textContent = 'Connected';
+                document.querySelector('.status-dot').style.background = 'var(--success)';
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'status_update') {
+                    // Update cache stats if available
+                    if (data.cache_stats) {
+                        console.log('Cache stats:', data.cache_stats);
+                    }
+                }
+            };
+
+            ws.onerror = () => {
+                document.getElementById('status-text').textContent = 'Error';
+                document.querySelector('.status-dot').style.background = 'var(--danger)';
+            };
+
+            ws.onclose = () => {
+                document.getElementById('status-text').textContent = 'Disconnected';
+                document.querySelector('.status-dot').style.background = 'var(--warning)';
+
+                // Reconnect after 3 seconds
+                setTimeout(setupWebSocket, 3000);
+            };
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Command palette (Cmd/Ctrl + K)
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('command-input').focus();
+            }
+
+            // Submit on Enter
+            if (e.key === 'Enter' && document.activeElement.id === 'command-input') {
+                executeCommand();
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Setup command input
+            document.getElementById('command-submit').onclick = () => executeCommand();
+
+            // Load initial data
+            loadAllResources();
+
+            // Setup WebSocket
+            setupWebSocket();
+
+            // Update status
+            document.getElementById('status-text').textContent = 'Ready';
+        });
+    </script>
+</body>
+</html>

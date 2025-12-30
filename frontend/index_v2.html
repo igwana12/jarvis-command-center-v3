@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis Command Center V2</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #fafafa;
+            --text-secondary: #a8a8a8;
+            --accent: #0066ff;
+            --accent-hover: #0052cc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #262626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #00a0ff);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Command Bar */
+        .command-bar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .command-input-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .command-input {
+            width: 100%;
+            padding: 1rem 3.5rem 1rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .command-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .command-submit {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent);
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .command-submit:hover {
+            background: var(--accent-hover);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-action {
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .quick-action:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--accent);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .tab-badge {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.125rem 0.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-badge {
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .card-tag {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+        }
+
+        .dropdown.open .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Search */
+        .search-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: scroll;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">J</div>
+                <div class="logo-text">Jarvis Command Center V2</div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span id="status-text">Connected</span>
+                <span id="resource-count" style="margin-left: 0.5rem; color: var(--text-secondary);">Loading...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Command Bar -->
+        <div class="command-bar">
+            <div class="command-input-container">
+                <input type="text"
+                       class="command-input"
+                       id="command-input"
+                       placeholder="Type a command or search... (Press ⌘K)">
+                <button class="command-submit" onclick="executeCommand()">Run</button>
+            </div>
+            <div class="quick-actions" id="quick-actions">
+                <!-- Quick actions will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('agents')">
+                Agents <span class="tab-badge" id="agents-count">0</span>
+            </button>
+            <button class="tab" onclick="switchTab('commands')">
+                Commands <span class="tab-badge" id="commands-count">0</span>
+            </button>
+            <button class="tab" onclick="switchTab('skills')">
+                Skills <span class="tab-badge" id="skills-count">0</span>
+            </button>
+            <button class="tab" onclick="switchTab('mcp')">
+                MCP Servers <span class="tab-badge" id="mcp-count">0</span>
+            </button>
+            <button class="tab" onclick="switchTab('workflows')">
+                Workflows <span class="tab-badge" id="workflows-count">0</span>
+            </button>
+            <button class="tab" onclick="switchTab('knowledge')">
+                Knowledge
+            </button>
+            <button class="tab" onclick="switchTab('monitor')">
+                System Monitor
+            </button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="tab-content active" id="agents-tab">
+            <div class="search-container">
+                <input type="text"
+                       class="search-input"
+                       placeholder="Search agents..."
+                       onkeyup="filterItems('agents', this.value)">
+            </div>
+            <div class="grid" id="agents-grid">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="commands-tab">
+            <div class="search-container">
+                <input type="text"
+                       class="search-input"
+                       placeholder="Search commands..."
+                       onkeyup="filterItems('commands', this.value)">
+            </div>
+            <div class="grid" id="commands-grid">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="skills-tab">
+            <div class="search-container">
+                <input type="text"
+                       class="search-input"
+                       placeholder="Search skills..."
+                       onkeyup="filterItems('skills', this.value)">
+            </div>
+            <div class="grid" id="skills-grid">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="mcp-tab">
+            <div class="grid" id="mcp-grid">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="workflows-tab">
+            <div class="grid" id="workflows-grid">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="knowledge-tab">
+            <div class="search-container">
+                <input type="text"
+                       class="search-input"
+                       id="knowledge-search"
+                       placeholder="Search knowledge base..."
+                       onkeypress="if(event.key === 'Enter') searchKnowledge()">
+            </div>
+            <div id="knowledge-results">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔍</div>
+                    <p>Enter a search query to explore the knowledge base</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="monitor-tab">
+            <div class="grid" id="monitor-grid">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let ws = null;
+        let allResources = {};
+
+        // Initialize
+        async function init() {
+            await loadAllResources();
+            setupWebSocket();
+            setupKeyboardShortcuts();
+            loadQuickActions();
+        }
+
+        // Load all resources
+        async function loadAllResources() {
+            try {
+                // Load system info
+                const systemInfo = await fetch(`${API_BASE}/`).then(r => r.json());
+                updateResourceCount(systemInfo.capabilities);
+
+                // Load each resource type
+                await Promise.all([
+                    loadAgents(),
+                    loadCommands(),
+                    loadSkills(),
+                    loadMCPServers(),
+                    loadWorkflows()
+                ]);
+
+                // Refresh resource counts
+                await fetch(`${API_BASE}/refresh`);
+            } catch (error) {
+                console.error('Failed to load resources:', error);
+            }
+        }
+
+        // Load agents
+        async function loadAgents() {
+            try {
+                const response = await fetch(`${API_BASE}/agents`);
+                const data = await response.json();
+                allResources.agents = data.agents;
+
+                const grid = document.getElementById('agents-grid');
+                grid.innerHTML = '';
+
+                Object.entries(data.agents).forEach(([name, description]) => {
+                    const card = createCard({
+                        title: name.replace(/-/g, ' '),
+                        description: description,
+                        badge: 'Agent',
+                        tags: [name.split('-')[0]],
+                        onclick: () => executeAgent(name)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('agents-count').textContent = data.count;
+            } catch (error) {
+                console.error('Failed to load agents:', error);
+            }
+        }
+
+        // Load commands
+        async function loadCommands() {
+            try {
+                const response = await fetch(`${API_BASE}/commands`);
+                const data = await response.json();
+                allResources.commands = data.commands;
+
+                const grid = document.getElementById('commands-grid');
+                grid.innerHTML = '';
+
+                Object.entries(data.commands).forEach(([cmd, info]) => {
+                    const card = createCard({
+                        title: cmd,
+                        description: info.description,
+                        badge: info.type === 'sc' ? 'SuperClaude' : 'Command',
+                        tags: [info.type],
+                        onclick: () => executeCommand(cmd)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('commands-count').textContent = data.count;
+            } catch (error) {
+                console.error('Failed to load commands:', error);
+            }
+        }
+
+        // Load skills
+        async function loadSkills() {
+            try {
+                const response = await fetch(`${API_BASE}/skills`);
+                const data = await response.json();
+                allResources.skills = data.skills;
+
+                const grid = document.getElementById('skills-grid');
+                grid.innerHTML = '';
+
+                Object.entries(data.skills).forEach(([name, info]) => {
+                    const card = createCard({
+                        title: name.replace(/-/g, ' '),
+                        description: info.description || 'No description available',
+                        badge: 'Skill',
+                        tags: info.files ? [`${info.files.length} files`] : [],
+                        onclick: () => viewSkill(name, info)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('skills-count').textContent = data.count;
+            } catch (error) {
+                console.error('Failed to load skills:', error);
+            }
+        }
+
+        // Load MCP servers
+        async function loadMCPServers() {
+            try {
+                const response = await fetch(`${API_BASE}/mcp-servers`);
+                const data = await response.json();
+                allResources.mcpServers = data.servers;
+
+                const grid = document.getElementById('mcp-grid');
+                grid.innerHTML = '';
+
+                Object.entries(data.servers).forEach(([id, info]) => {
+                    const card = createCard({
+                        title: info.name,
+                        description: info.description,
+                        badge: info.status === 'available' ? 'Available' : 'Offline',
+                        tags: [id],
+                        onclick: () => toggleMCPServer(id)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('mcp-count').textContent = data.count;
+            } catch (error) {
+                console.error('Failed to load MCP servers:', error);
+            }
+        }
+
+        // Load workflows
+        async function loadWorkflows() {
+            try {
+                const response = await fetch(`${API_BASE}/workflows`);
+                const data = await response.json();
+                allResources.workflows = data.workflows;
+
+                const grid = document.getElementById('workflows-grid');
+                grid.innerHTML = '';
+
+                Object.entries(data.workflows).forEach(([id, info]) => {
+                    const card = createCard({
+                        title: info.name,
+                        description: info.description,
+                        badge: 'Workflow',
+                        tags: info.parameters || [],
+                        onclick: () => triggerWorkflow(id, info)
+                    });
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('workflows-count').textContent = data.count;
+            } catch (error) {
+                console.error('Failed to load workflows:', error);
+            }
+        }
+
+        // Create card element
+        function createCard({ title, description, badge, tags = [], onclick }) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            if (onclick) card.onclick = onclick;
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-title">${title}</div>
+                    ${badge ? `<span class="card-badge">${badge}</span>` : ''}
+                </div>
+                <div class="card-description">${description}</div>
+                ${tags.length > 0 ? `
+                    <div class="card-footer">
+                        ${tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}
+                    </div>
+                ` : ''}
+            `;
+
+            return card;
+        }
+
+        // Switch tabs
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+
+            // Load monitor data if needed
+            if (tabName === 'monitor') {
+                loadMonitorData();
+            }
+        }
+
+        // Filter items
+        function filterItems(type, query) {
+            const grid = document.getElementById(`${type}-grid`);
+            const cards = grid.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(query.toLowerCase()) ? '' : 'none';
+            });
+        }
+
+        // Execute command
+        async function executeCommand(cmd) {
+            const command = cmd || document.getElementById('command-input').value;
+            if (!command) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/command`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command })
+                });
+                const result = await response.json();
+                console.log('Command result:', result);
+                alert(`Command executed: ${JSON.stringify(result, null, 2)}`);
+            } catch (error) {
+                console.error('Command failed:', error);
+                alert(`Command failed: ${error.message}`);
+            }
+        }
+
+        // Execute agent
+        async function executeAgent(agentName) {
+            const task = prompt(`What task should ${agentName} perform?`);
+            if (!task) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/agent/execute`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ agent: agentName, task })
+                });
+                const result = await response.json();
+                alert(`Agent started: ${result.task_id}`);
+            } catch (error) {
+                alert(`Failed to execute agent: ${error.message}`);
+            }
+        }
+
+        // Trigger workflow
+        async function triggerWorkflow(workflowId, info) {
+            const params = {};
+            if (info.parameters && info.parameters.length > 0) {
+                for (const param of info.parameters) {
+                    const value = prompt(`Enter value for ${param}:`);
+                    if (value) params[param] = value;
+                }
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/workflow/trigger`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ workflow_id: workflowId, parameters: params })
+                });
+                const result = await response.json();
+                alert(`Workflow triggered: ${result.status}`);
+            } catch (error) {
+                alert(`Failed to trigger workflow: ${error.message}`);
+            }
+        }
+
+        // Search knowledge
+        async function searchKnowledge() {
+            const query = document.getElementById('knowledge-search').value;
+            if (!query) return;
+
+            const resultsDiv = document.getElementById('knowledge-results');
+            resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/knowledge/search?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (data.results && data.results.length > 0) {
+                    resultsDiv.innerHTML = data.results.map(result => `
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">${result.title || result.skill}</div>
+                                <span class="card-badge">${result.type || 'Knowledge'}</span>
+                            </div>
+                            <div class="card-description">${result.snippet}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    resultsDiv.innerHTML = '<div class="empty-state"><p>No results found</p></div>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="empty-state"><p>Search failed: ${error.message}</p></div>`;
+            }
+        }
+
+        // Load monitor data
+        async function loadMonitorData() {
+            try {
+                const response = await fetch(`${API_BASE}/processes`);
+                const data = await response.json();
+
+                const grid = document.getElementById('monitor-grid');
+                grid.innerHTML = `
+                    <div class="card">
+                        <div class="card-title">System Resources</div>
+                        <div class="card-description">
+                            CPU: ${data.cpu}%<br>
+                            Memory: ${data.memory}%<br>
+                            Active Processes: ${data.count}
+                        </div>
+                    </div>
+                `;
+
+                // Add top processes
+                if (data.processes) {
+                    data.processes.slice(0, 5).forEach(proc => {
+                        const card = createCard({
+                            title: proc.name,
+                            description: `PID: ${proc.pid}`,
+                            badge: `CPU: ${proc.cpu.toFixed(1)}%`,
+                            tags: [`MEM: ${proc.memory.toFixed(1)}%`]
+                        });
+                        grid.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to load monitor data:', error);
+            }
+        }
+
+        // View skill
+        function viewSkill(name, info) {
+            alert(`Skill: ${name}\nPath: ${info.path}\nFiles: ${info.files.join(', ')}`);
+        }
+
+        // Toggle MCP server
+        function toggleMCPServer(serverId) {
+            alert(`Toggle MCP server: ${serverId}`);
+        }
+
+        // Update resource count
+        function updateResourceCount(capabilities) {
+            const counts = Object.entries(capabilities)
+                .map(([key, value]) => `${value} ${key}`)
+                .join(' • ');
+            document.getElementById('resource-count').textContent = counts;
+        }
+
+        // Load quick actions
+        function loadQuickActions() {
+            const actions = [
+                { label: '🎬 Analyze Video', action: 'analyze video' },
+                { label: '⚡ Trigger Workflow', action: 'workflow' },
+                { label: '🤖 Run Agent', action: 'agent' },
+                { label: '🔍 Search', action: 'search' },
+                { label: '📊 Status', action: 'status' },
+                { label: '🔄 Refresh', action: () => loadAllResources() }
+            ];
+
+            const container = document.getElementById('quick-actions');
+            container.innerHTML = actions.map(action =>
+                `<button class="quick-action" onclick="${
+                    typeof action.action === 'function'
+                        ? 'loadAllResources()'
+                        : `document.getElementById('command-input').value='${action.action}';executeCommand()`
+                }">${action.label}</button>`
+            ).join('');
+        }
+
+        // Setup WebSocket
+        function setupWebSocket() {
+            ws = new WebSocket('ws://localhost:8000/ws');
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                document.getElementById('status-text').textContent = 'Connected';
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'status_update') {
+                    // Update status if on monitor tab
+                    if (document.getElementById('monitor-tab').classList.contains('active')) {
+                        loadMonitorData();
+                    }
+                }
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                document.getElementById('status-text').textContent = 'Disconnected';
+                setTimeout(setupWebSocket, 5000); // Reconnect after 5 seconds
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        // Setup keyboard shortcuts
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Command palette: Cmd+K or Ctrl+K
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    document.getElementById('command-input').focus();
+                }
+
+                // Execute: Enter in command input
+                if (e.key === 'Enter' && document.activeElement.id === 'command-input') {
+                    executeCommand();
+                }
+            });
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

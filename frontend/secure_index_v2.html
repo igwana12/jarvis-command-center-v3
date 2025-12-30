@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws://localhost:8000 wss://localhost:8000">
+    <title>Jarvis Command Center V2 - Secured</title>
+    <style>
+        /* Styles remain the same - CSS not a security concern here */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #fafafa;
+            --text-secondary: #a8a8a8;
+            --accent: #0066ff;
+            --accent-hover: #0052cc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #262626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #00a0ff);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover { background: var(--accent-hover); }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            padding: 0.75rem;
+            border-radius: 6px;
+            color: var(--danger);
+            margin-bottom: 1rem;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div id="auth-screen">
+        <div class="auth-container">
+            <h1 style="margin-bottom: 2rem; text-align: center;">Jarvis Command Center</h1>
+
+            <div id="error-container" class="hidden"></div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <p style="margin-top: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">
+                Secured with authentication and encryption
+            </p>
+        </div>
+    </div>
+
+    <div id="app-screen" class="hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">J</div>
+                    <div style="font-size: 1.25rem; font-weight: 600;">Jarvis Command Center V2 - Secured</div>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                        Logged in as: <span id="user-name"></span>
+                    </div>
+                    <button onclick="logout()" style="padding: 0.5rem 1rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); cursor: pointer;">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <h2>Authenticated Dashboard</h2>
+            <p style="color: var(--text-secondary); margin-top: 1rem;">
+                Security features enabled: Authentication, Rate Limiting, CORS Protection, XSS Prevention
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let authToken = null;
+        let wsToken = null;
+        let ws = null;
+
+        // HTML escaping utility
+        function escapeHtml(unsafe) {
+            const div = document.createElement('div');
+            div.textContent = unsafe;
+            return div.innerHTML;
+        }
+
+        // Show error message
+        function showError(message) {
+            const container = document.getElementById('error-container');
+            container.className = 'error-message';
+            container.textContent = message;
+        }
+
+        // Hide error message
+        function hideError() {
+            const container = document.getElementById('error-container');
+            container.className = 'error-message hidden';
+        }
+
+        // Handle login
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Create form data
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+
+                const response = await fetch(`${API_BASE}/token`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Invalid credentials');
+                }
+
+                const data = await response.json();
+                authToken = data.access_token;
+
+                // Store token securely
+                sessionStorage.setItem('auth_token', authToken);
+                sessionStorage.setItem('username', username);
+
+                // Get WebSocket token
+                await getWebSocketToken();
+
+                // Show app
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('app-screen').classList.remove('hidden');
+                document.getElementById('user-name').textContent = escapeHtml(username);
+
+                // Setup WebSocket
+                setupWebSocket();
+
+            } catch (error) {
+                showError(error.message || 'Login failed. Please try again.');
+                console.error('Login error:', error);
+            }
+        });
+
+        // Get WebSocket token
+        async function getWebSocketToken() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/ws-token`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to get WebSocket token');
+                }
+
+                const data = await response.json();
+                wsToken = data.token;
+
+            } catch (error) {
+                console.error('WebSocket token error:', error);
+            }
+        }
+
+        // Setup authenticated WebSocket
+        function setupWebSocket() {
+            if (!wsToken) {
+                console.error('No WebSocket token available');
+                return;
+            }
+
+            ws = new WebSocket(`ws://localhost:8000/ws?token=${wsToken}`);
+
+            ws.onopen = () => {
+                console.log('WebSocket connected (authenticated)');
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log('WebSocket message:', data);
+                // Handle messages...
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                // Reconnect after 5 seconds
+                setTimeout(setupWebSocket, 5000);
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
+
+        // Logout
+        function logout() {
+            authToken = null;
+            wsToken = null;
+            sessionStorage.removeItem('auth_token');
+            sessionStorage.removeItem('username');
+
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+
+            document.getElementById('app-screen').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('login-form').reset();
+        }
+
+        // Make authenticated API requests
+        async function authenticatedFetch(url, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+                ...options.headers
+            };
+
+            const response = await fetch(url, {
+                ...options,
+                headers
+            });
+
+            // Handle 401 (unauthorized)
+            if (response.status === 401) {
+                logout();
+                throw new Error('Session expired. Please login again.');
+            }
+
+            return response;
+        }
+
+        // Example: Execute command with authentication
+        async function executeCommand(command) {
+            try {
+                const response = await authenticatedFetch(`${API_BASE}/command`, {
+                    method: 'POST',
+                    body: JSON.stringify({ command })
+                });
+
+                const result = await response.json();
+                console.log('Command result:', result);
+                return result;
+
+            } catch (error) {
+                console.error('Command error:', error);
+                showError(error.message);
+            }
+        }
+
+        // Check for existing session on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = sessionStorage.getItem('auth_token');
+            const username = sessionStorage.getItem('username');
+
+            if (token && username) {
+                authToken = token;
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('app-screen').classList.remove('hidden');
+                document.getElementById('user-name').textContent = escapeHtml(username);
+
+                // Get WebSocket token and connect
+                getWebSocketToken().then(() => {
+                    setupWebSocket();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

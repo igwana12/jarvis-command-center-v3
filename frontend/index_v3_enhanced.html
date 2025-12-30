@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis Command Center V3 - Enhanced Scale Architecture</title>
+    <meta name="description" content="Unified interface for 6,000+ Jarvis AI capabilities">
+
+    <!-- Security headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://localhost:* https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+    <style>
+        /* CSS Variables */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --bg-elevated: #1f1f1f;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-tertiary: #666666;
+            --border: #222222;
+            --border-hover: #333333;
+            --accent: #0070f3;
+            --accent-hover: #0060d3;
+            --success: #0cce6b;
+            --warning: #ffa400;
+            --danger: #ff4400;
+
+            /* Seven Pillars Colors */
+            --pillar-analysis: #3b82f6;
+            --pillar-design: #8b5cf6;
+            --pillar-development: #10b981;
+            --pillar-testing: #f59e0b;
+            --pillar-documentation: #6366f1;
+            --pillar-operations: #ef4444;
+            --pillar-management: #ec4899;
+
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Focus indicators */
+        *:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* Skip link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #00a8ff);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Command Palette Button */
+        .command-palette-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 280px;
+        }
+
+        .command-palette-trigger:hover {
+            border-color: var(--accent);
+            background: var(--bg-elevated);
+        }
+
+        .command-palette-trigger kbd {
+            background: var(--bg-primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        /* Command Palette Modal */
+        .command-palette-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            animation: fadeIn 0.15s ease;
+        }
+
+        .command-palette-overlay.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 15vh;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .command-palette {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 640px;
+            max-width: 90vw;
+            max-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+            animation: slideDown 0.2s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .command-palette-search {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .command-palette-input {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .command-palette-input:focus {
+            border-color: var(--accent);
+        }
+
+        .command-palette-results {
+            overflow-y: auto;
+            max-height: calc(60vh - 80px);
+            padding: 0.5rem;
+        }
+
+        .command-result {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .command-result:hover,
+        .command-result.selected {
+            background: var(--bg-tertiary);
+            border-color: var(--accent);
+        }
+
+        .command-result-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .command-result-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .command-result-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .command-result-description {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .command-result-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Seven Pillars Navigation */
+        .pillars-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .pillar-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .pillar-btn:hover::before,
+        .pillar-btn.active::before {
+            opacity: 0.1;
+        }
+
+        .pillar-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .pillar-btn.active {
+            border-color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        /* Pillar-specific colors */
+        .pillar-btn[data-pillar="analysis"]::before { background: var(--pillar-analysis); }
+        .pillar-btn[data-pillar="design"]::before { background: var(--pillar-design); }
+        .pillar-btn[data-pillar="development"]::before { background: var(--pillar-development); }
+        .pillar-btn[data-pillar="testing"]::before { background: var(--pillar-testing); }
+        .pillar-btn[data-pillar="documentation"]::before { background: var(--pillar-documentation); }
+        .pillar-btn[data-pillar="operations"]::before { background: var(--pillar-operations); }
+        .pillar-btn[data-pillar="management"]::before { background: var(--pillar-management); }
+
+        .pillar-icon {
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .pillar-label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            position: relative;
+        }
+
+        .pillar-count {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        /* Filters Bar */
+        .filters-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .filter-select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .filter-select:hover {
+            border-color: var(--accent);
+        }
+
+        /* Virtual Scroll Container */
+        .virtual-scroll-container {
+            position: relative;
+            overflow-y: auto;
+            height: calc(100vh - 500px);
+            min-height: 400px;
+        }
+
+        .virtual-scroll-spacer {
+            position: relative;
+        }
+
+        .virtual-scroll-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Resource Cards */
+        .resource-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .resource-card:hover::before,
+        .resource-card:focus::before {
+            opacity: 0.05;
+        }
+
+        .resource-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .resource-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .resource-card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .resource-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            position: relative;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .resource-card-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            position: relative;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .resource-card-footer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .resource-badge {
+            display: inline-block;
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .resource-badge.priority-high {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-card-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-card-change {
+            font-size: 0.75rem;
+            color: var(--success);
+        }
+
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--bg-tertiary) 25%,
+                var(--bg-secondary) 50%,
+                var(--bg-tertiary) 75%
+            );
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .header-stats {
+                justify-content: space-between;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .command-palette {
+                width: 100%;
+                max-height: 80vh;
+            }
+
+            .pillars-nav {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .virtual-scroll-content {
+                grid-template-columns: 1fr;
+            }
+
+            .toast {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Loading indicator */
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon" aria-hidden="true">J</div>
+                <h1 class="logo-text">Jarvis Command Center V3</h1>
+            </div>
+
+            <button class="command-palette-trigger" onclick="openCommandPalette()" aria-label="Open command palette">
+                <span>🔍 Search all resources...</span>
+                <kbd>⌘K</kbd>
+            </button>
+
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Resources:</span>
+                    <span class="stat-value" id="total-resources">6,249</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Active:</span>
+                    <span class="stat-value" id="active-resources">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Command Palette Overlay -->
+    <div class="command-palette-overlay" id="command-palette-overlay" onclick="closeCommandPalette(event)">
+        <div class="command-palette" onclick="event.stopPropagation()">
+            <div class="command-palette-search">
+                <input
+                    type="text"
+                    class="command-palette-input"
+                    id="command-palette-input"
+                    placeholder="Search skills, commands, tools... (type:skill, pillar:analysis)"
+                    autocomplete="off"
+                    aria-label="Search resources"
+                />
+            </div>
+            <div class="command-palette-results" id="command-palette-results">
+                <div class="loading-indicator">
+                    <div class="spinner"></div>
+                    <span style="margin-left: 1rem;">Indexing resources...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container" role="main">
+        <!-- Quick Stats -->
+        <section class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-card-label">Total Skills</div>
+                <div class="stat-card-value">61</div>
+                <div class="stat-card-change">+47 from V2</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-label">Sacred Circuits Tools</div>
+                <div class="stat-card-value">300+</div>
+                <div class="stat-card-change">New integration</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-label">Knowledge Files</div>
+                <div class="stat-card-value">4,928</div>
+                <div class="stat-card-change">Indexed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-label">API Services</div>
+                <div class="stat-card-value" id="api-status">7</div>
+                <div class="stat-card-change">All online</div>
+            </div>
+        </section>
+
+        <!-- Seven Pillars Navigation -->
+        <nav class="pillars-nav" role="navigation" aria-label="Seven Pillars">
+            <button class="pillar-btn active" data-pillar="analysis" onclick="selectPillar('analysis')">
+                <div class="pillar-icon">🔍</div>
+                <div class="pillar-label">Analysis & Research</div>
+                <div class="pillar-count" id="count-analysis">67 resources</div>
+            </button>
+            <button class="pillar-btn" data-pillar="design" onclick="selectPillar('design')">
+                <div class="pillar-icon">🎨</div>
+                <div class="pillar-label">Design & Creation</div>
+                <div class="pillar-count" id="count-design">89 resources</div>
+            </button>
+            <button class="pillar-btn" data-pillar="development" onclick="selectPillar('development')">
+                <div class="pillar-icon">⚡</div>
+                <div class="pillar-label">Development</div>
+                <div class="pillar-count" id="count-development">124 resources</div>
+            </button>
+            <button class="pillar-btn" data-pillar="testing" onclick="selectPillar('testing')">
+                <div class="pillar-icon">✓</div>
+                <div class="pillar-label">Testing & Quality</div>
+                <div class="pillar-count" id="count-testing">43 resources</div>
+            </button>
+            <button class="pillar-btn" data-pillar="documentation" onclick="selectPillar('documentation')">
+                <div class="pillar-icon">📚</div>
+                <div class="pillar-label">Documentation</div>
+                <div class="pillar-count" id="count-documentation">4,928 files</div>
+            </button>
+            <button class="pillar-btn" data-pillar="operations" onclick="selectPillar('operations')">
+                <div class="pillar-icon">🔧</div>
+                <div class="pillar-label">Operations</div>
+                <div class="pillar-count" id="count-operations">52 resources</div>
+            </button>
+            <button class="pillar-btn" data-pillar="management" onclick="selectPillar('management')">
+                <div class="pillar-icon">📊</div>
+                <div class="pillar-label">Management</div>
+                <div class="pillar-count" id="count-management">38 resources</div>
+            </button>
+        </nav>
+
+        <!-- Filters Bar -->
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label class="filter-label" for="filter-type">Type:</label>
+                <select id="filter-type" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All Resources</option>
+                    <option value="skill">Skills (61)</option>
+                    <option value="command">Commands (300+)</option>
+                    <option value="agent">Agents (14)</option>
+                    <option value="mcp">MCP Servers (12)</option>
+                    <option value="workflow">Workflows</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label" for="filter-priority">Priority:</label>
+                <select id="filter-priority" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All Priorities</option>
+                    <option value="high">High Priority</option>
+                    <option value="recent">Recently Used</option>
+                    <option value="favorites">Favorites</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label" for="filter-status">Status:</label>
+                <select id="filter-status" class="filter-select" onchange="applyFilters()">
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Virtual Scroll Container -->
+        <div class="virtual-scroll-container" id="scroll-container">
+            <div class="virtual-scroll-spacer" id="scroll-spacer">
+                <div class="virtual-scroll-content" id="scroll-content">
+                    <!-- Resources will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FlexSearch Library -->
+    <script src="https://cdn.jsdelivr.net/npm/flexsearch@0.7.43/dist/flexsearch.bundle.js"></script>
+
+    <script>
+        // Application State
+        const state = {
+            resources: [],
+            filteredResources: [],
+            currentPillar: 'analysis',
+            searchIndex: null,
+            selectedIndex: 0,
+            favorites: new Set(),
+            recentlyUsed: [],
+            isLoading: true
+        };
+
+        // Virtual Scrolling Configuration
+        const ITEM_HEIGHT = 180;
+        const BUFFER_SIZE = 3;
+        let visibleRange = { start: 0, end: 20 };
+
+        // Initialize Search Index
+        function initSearchIndex() {
+            state.searchIndex = new FlexSearch.Index({
+                preset: 'performance',
+                tokenize: 'forward',
+                cache: true,
+                resolution: 9
+            });
+
+            // Index all resources
+            state.resources.forEach((resource, index) => {
+                const searchText = `${resource.title} ${resource.description} ${resource.tags?.join(' ') || ''} ${resource.category}`;
+                state.searchIndex.add(index, searchText);
+            });
+
+            console.log(`Indexed ${state.resources.length} resources`);
+        }
+
+        // Load Mock Data (Replace with API calls)
+        async function loadResources() {
+            // Simulate loading 300+ resources
+            const mockResources = [];
+
+            // Add skills
+            for (let i = 1; i <= 61; i++) {
+                mockResources.push({
+                    id: `skill-${i}`,
+                    type: 'skill',
+                    title: `Skill ${i}`,
+                    description: `Advanced capability for specialized task ${i}`,
+                    category: 'analysis',
+                    pillar: 'analysis',
+                    icon: '🎯',
+                    priority: i <= 5 ? 'high' : 'medium',
+                    tags: ['ai', 'automation']
+                });
+            }
+
+            // Add commands
+            for (let i = 1; i <= 100; i++) {
+                mockResources.push({
+                    id: `command-${i}`,
+                    type: 'command',
+                    title: `/sc:command-${i}`,
+                    description: `Sacred Circuits command for operation ${i}`,
+                    category: 'development',
+                    pillar: 'development',
+                    icon: '⚡',
+                    priority: 'medium',
+                    tags: ['command', 'sc']
+                });
+            }
+
+            // Add agents
+            for (let i = 1; i <= 14; i++) {
+                mockResources.push({
+                    id: `agent-${i}`,
+                    type: 'agent',
+                    title: `Agent ${i}`,
+                    description: `Specialized agent for task domain ${i}`,
+                    category: 'management',
+                    pillar: 'management',
+                    icon: '🤖',
+                    priority: 'high',
+                    tags: ['agent', 'automation']
+                });
+            }
+
+            state.resources = mockResources;
+            state.filteredResources = mockResources;
+
+            // Initialize search index
+            initSearchIndex();
+
+            state.isLoading = false;
+        }
+
+        // Render Resources with Virtual Scrolling
+        function renderResources() {
+            const container = document.getElementById('scroll-content');
+            const spacer = document.getElementById('scroll-spacer');
+
+            // Calculate visible range
+            const scrollTop = document.getElementById('scroll-container').scrollTop;
+            const viewportHeight = document.getElementById('scroll-container').clientHeight;
+
+            const start = Math.max(0, Math.floor(scrollTop / ITEM_HEIGHT) - BUFFER_SIZE);
+            const end = Math.min(
+                state.filteredResources.length,
+                Math.ceil((scrollTop + viewportHeight) / ITEM_HEIGHT) + BUFFER_SIZE
+            );
+
+            visibleRange = { start, end };
+
+            // Set spacer height
+            spacer.style.height = `${state.filteredResources.length * ITEM_HEIGHT}px`;
+
+            // Render only visible items
+            container.innerHTML = '';
+            container.style.paddingTop = `${start * ITEM_HEIGHT}px`;
+
+            for (let i = start; i < end; i++) {
+                const resource = state.filteredResources[i];
+                if (!resource) continue;
+
+                const card = createResourceCard(resource);
+                container.appendChild(card);
+            }
+
+            // Update stats
+            document.getElementById('active-resources').textContent = state.filteredResources.length;
+        }
+
+        // Create Resource Card
+        function createResourceCard(resource) {
+            const card = document.createElement('div');
+            card.className = 'resource-card';
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+            card.onclick = () => executeResource(resource);
+
+            card.innerHTML = `
+                <div class="resource-card-header">
+                    <div class="resource-card-icon" style="background: var(--pillar-${resource.pillar})">${resource.icon}</div>
+                    <div class="resource-card-title">${resource.title}</div>
+                </div>
+                <div class="resource-card-description">${resource.description}</div>
+                <div class="resource-card-footer">
+                    <span class="resource-badge ${resource.priority === 'high' ? 'priority-high' : ''}">${resource.type}</span>
+                    ${resource.priority === 'high' ? '<span class="resource-badge priority-high">Priority</span>' : ''}
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Command Palette Functions
+        function openCommandPalette() {
+            const overlay = document.getElementById('command-palette-overlay');
+            const input = document.getElementById('command-palette-input');
+
+            overlay.classList.add('active');
+            input.focus();
+            state.selectedIndex = 0;
+
+            // Show recent items initially
+            renderCommandPaletteResults(state.resources.slice(0, 20));
+        }
+
+        function closeCommandPalette(event) {
+            if (event && event.target !== document.getElementById('command-palette-overlay')) return;
+
+            const overlay = document.getElementById('command-palette-overlay');
+            overlay.classList.remove('active');
+        }
+
+        function handleCommandPaletteSearch(query) {
+            if (!query.trim()) {
+                renderCommandPaletteResults(state.resources.slice(0, 20));
+                return;
+            }
+
+            // Parse search syntax
+            const filters = parseSearchQuery(query);
+
+            // Perform search
+            const results = state.searchIndex.search(filters.query, { limit: 50 });
+            const resources = results.map(index => state.resources[index]);
+
+            // Apply filters
+            let filtered = resources;
+            if (filters.type) {
+                filtered = filtered.filter(r => r.type === filters.type);
+            }
+            if (filters.pillar) {
+                filtered = filtered.filter(r => r.pillar === filters.pillar);
+            }
+
+            renderCommandPaletteResults(filtered);
+        }
+
+        function parseSearchQuery(query) {
+            const filters = { query };
+
+            // Extract type:value filters
+            const typeMatch = query.match(/type:(\w+)/);
+            if (typeMatch) {
+                filters.type = typeMatch[1];
+                filters.query = query.replace(/type:\w+/, '').trim();
+            }
+
+            // Extract pillar:value filters
+            const pillarMatch = query.match(/pillar:(\w+)/);
+            if (pillarMatch) {
+                filters.pillar = pillarMatch[1];
+                filters.query = query.replace(/pillar:\w+/, '').trim();
+            }
+
+            return filters;
+        }
+
+        function renderCommandPaletteResults(results) {
+            const container = document.getElementById('command-palette-results');
+
+            if (results.length === 0) {
+                container.innerHTML = '<div class="loading-indicator">No results found</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            results.slice(0, 20).forEach((resource, index) => {
+                const result = document.createElement('div');
+                result.className = `command-result ${index === state.selectedIndex ? 'selected' : ''}`;
+                result.onclick = () => {
+                    executeResource(resource);
+                    closeCommandPalette();
+                };
+
+                result.innerHTML = `
+                    <div class="command-result-icon" style="background: var(--pillar-${resource.pillar})">${resource.icon}</div>
+                    <div class="command-result-content">
+                        <div class="command-result-title">${resource.title}</div>
+                        <div class="command-result-description">${resource.description}</div>
+                    </div>
+                    <span class="command-result-badge">${resource.type}</span>
+                `;
+
+                container.appendChild(result);
+            });
+        }
+
+        // Execute Resource
+        function executeResource(resource) {
+            showToast(`Executing: ${resource.title}`, 'success');
+            console.log('Executing resource:', resource);
+
+            // Track in recent
+            state.recentlyUsed = [resource.id, ...state.recentlyUsed.filter(id => id !== resource.id)].slice(0, 50);
+        }
+
+        // Select Pillar
+        function selectPillar(pillar) {
+            state.currentPillar = pillar;
+
+            // Update UI
+            document.querySelectorAll('.pillar-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.pillar === pillar);
+            });
+
+            // Filter resources
+            applyFilters();
+        }
+
+        // Apply Filters
+        function applyFilters() {
+            const type = document.getElementById('filter-type').value;
+            const priority = document.getElementById('filter-priority').value;
+            const status = document.getElementById('filter-status').value;
+
+            let filtered = state.resources;
+
+            // Filter by pillar
+            // filtered = filtered.filter(r => r.pillar === state.currentPillar);
+
+            // Filter by type
+            if (type !== 'all') {
+                filtered = filtered.filter(r => r.type === type);
+            }
+
+            // Filter by priority
+            if (priority === 'high') {
+                filtered = filtered.filter(r => r.priority === 'high');
+            } else if (priority === 'recent') {
+                filtered = state.recentlyUsed.map(id => state.resources.find(r => r.id === id)).filter(Boolean);
+            } else if (priority === 'favorites') {
+                filtered = filtered.filter(r => state.favorites.has(r.id));
+            }
+
+            state.filteredResources = filtered;
+            renderResources();
+        }
+
+        // Toast Notifications
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Command palette (⌘K or Ctrl+K)
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                openCommandPalette();
+            }
+
+            // Close command palette (Escape)
+            if (e.key === 'Escape') {
+                closeCommandPalette();
+            }
+
+            // Navigate command palette results (Arrow keys)
+            if (document.getElementById('command-palette-overlay').classList.contains('active')) {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    state.selectedIndex = Math.min(state.selectedIndex + 1, 19);
+                    handleCommandPaletteSearch(document.getElementById('command-palette-input').value);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    state.selectedIndex = Math.max(state.selectedIndex - 1, 0);
+                    handleCommandPaletteSearch(document.getElementById('command-palette-input').value);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const results = document.querySelectorAll('.command-result');
+                    if (results[state.selectedIndex]) {
+                        results[state.selectedIndex].click();
+                    }
+                }
+            }
+        });
+
+        // Search input handler
+        document.getElementById('command-palette-input')?.addEventListener('input', (e) => {
+            handleCommandPaletteSearch(e.target.value);
+        });
+
+        // Virtual scroll handler
+        document.getElementById('scroll-container')?.addEventListener('scroll', () => {
+            renderResources();
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadResources();
+            renderResources();
+        });
+    </script>
+</body>
+</html>
