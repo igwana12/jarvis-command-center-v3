@@ -1,22 +1,13 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "backend/optimized_main_v2.py",
-      "use": "@vercel/python"
+      "source": "/(.*)",
+      "destination": "/api/main"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "backend/optimized_main_v2.py"
-    }
-  ],
-  "env": {
-    "PYTHONPATH": "/vercel/path0/backend"
-  },
   "functions": {
-    "backend/optimized_main_v2.py": {
+    "api/main.py": {
       "runtime": "python3.9",
       "maxDuration": 30
     }
