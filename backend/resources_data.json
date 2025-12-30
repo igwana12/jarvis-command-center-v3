@@ -1,0 +1,715 @@
+{
+  "skills": [
+    {
+      "name": "Video Analyzer",
+      "title": "Video Analyzer",
+      "description": "Analyze videos from URLs, extract metadata, transcripts, and frames",
+      "path": "/Volumes/AI_WORKSPACE/video_analyzer/video_analyzer.py",
+      "type": "skill",
+      "category": "video_analyzer"
+    },
+    {
+      "name": "Test Analyzer",
+      "title": "Test Analyzer",
+      "description": "Execute test analyzer operations",
+      "path": "/Volumes/AI_WORKSPACE/video_analyzer/test_analyzer.py",
+      "type": "skill",
+      "category": "video_analyzer"
+    },
+    {
+      "name": "Analyze Tiktok",
+      "title": "Analyze Tiktok",
+      "description": "Execute analyze tiktok operations",
+      "path": "/Volumes/AI_WORKSPACE/video_analyzer/analyze_tiktok.py",
+      "type": "skill",
+      "category": "video_analyzer"
+    },
+    {
+      "name": "Video Analyzer Enhanced",
+      "title": "Video Analyzer Enhanced",
+      "description": "Execute video analyzer enhanced operations",
+      "path": "/Volumes/AI_WORKSPACE/video_analyzer/video_analyzer_enhanced.py",
+      "type": "skill",
+      "category": "video_analyzer"
+    },
+    {
+      "name": "Run Analysis",
+      "title": "Run Analysis",
+      "description": "Execute run analysis operations",
+      "path": "/Volumes/AI_WORKSPACE/video_analyzer/run_analysis.py",
+      "type": "skill",
+      "category": "video_analyzer"
+    },
+    {
+      "name": "Json To Markdown Skill",
+      "title": "Json To Markdown Skill",
+      "description": "Execute json to markdown skill operations",
+      "path": "/Volumes/AI_WORKSPACE/video_analyzer/json_to_markdown_skill.py",
+      "type": "skill",
+      "category": "video_analyzer"
+    },
+    {
+      "name": "Knowledge Distiller",
+      "title": "Knowledge Distiller",
+      "description": "Execute knowledge distiller operations",
+      "path": "/Volumes/AI_WORKSPACE/video_analyzer/knowledge_distiller.py",
+      "type": "skill",
+      "category": "video_analyzer"
+    },
+    {
+      "name": "Enhance Images",
+      "title": "Enhance Images",
+      "description": "Execute enhance images operations",
+      "path": "/Volumes/AI_WORKSPACE/image_enhancer/enhance_images.py",
+      "type": "skill",
+      "category": "image_enhancer"
+    },
+    {
+      "name": "Simple Enhance",
+      "title": "Simple Enhance",
+      "description": "Execute simple enhance operations",
+      "path": "/Volumes/AI_WORKSPACE/image_enhancer/simple_enhance.py",
+      "type": "skill",
+      "category": "image_enhancer"
+    },
+    {
+      "name": "Replicate Upscale Smart",
+      "title": "Replicate Upscale Smart",
+      "description": "Execute replicate upscale smart operations",
+      "path": "/Volumes/AI_WORKSPACE/image_enhancer/replicate_upscale_smart.py",
+      "type": "skill",
+      "category": "image_enhancer"
+    },
+    {
+      "name": "Replicate Upscale",
+      "title": "Replicate Upscale",
+      "description": "Upscale images 4x using Replicate AI models",
+      "path": "/Volumes/AI_WORKSPACE/image_enhancer/replicate_upscale.py",
+      "type": "skill",
+      "category": "image_enhancer"
+    },
+    {
+      "name": "Rename Images",
+      "title": "Rename Images",
+      "description": "Execute rename images operations",
+      "path": "/Volumes/AI_WORKSPACE/image_enhancer/rename_images.py",
+      "type": "skill",
+      "category": "image_enhancer"
+    },
+    {
+      "name": "Process Remaining",
+      "title": "Process Remaining",
+      "description": "Execute process remaining operations",
+      "path": "/Volumes/AI_WORKSPACE/image_enhancer/process_remaining.py",
+      "type": "skill",
+      "category": "image_enhancer"
+    },
+    {
+      "name": "Rename And Convert",
+      "title": "Rename And Convert",
+      "description": "Execute rename and convert operations",
+      "path": "/Volumes/AI_WORKSPACE/image_enhancer/rename_and_convert.py",
+      "type": "skill",
+      "category": "image_enhancer"
+    },
+    {
+      "name": "Quick Start",
+      "title": "Quick Start",
+      "description": "Execute quick start operations",
+      "path": "/Volumes/AI_WORKSPACE/bill_hicks_ai/quick_start.py",
+      "type": "skill",
+      "category": "bill_hicks_ai"
+    },
+    {
+      "name": "Bill Hicks Chat",
+      "title": "Bill Hicks Chat",
+      "description": "Interactive AI chat with Bill Hicks personality",
+      "path": "/Volumes/AI_WORKSPACE/bill_hicks_ai/bill_hicks_chat.py",
+      "type": "skill",
+      "category": "bill_hicks_ai"
+    },
+    {
+      "name": "Telegram Bridge",
+      "title": "Telegram Bridge",
+      "description": "Bridge for Telegram bot integration",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/telegram_bridge.py",
+      "type": "skill",
+      "category": "n8n_automation"
+    },
+    {
+      "name": "Test Webhook",
+      "title": "Test Webhook",
+      "description": "Execute test webhook operations",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/test_webhook.py",
+      "type": "skill",
+      "category": "n8n_automation"
+    },
+    {
+      "name": "Telegram Message Fix",
+      "title": "Telegram Message Fix",
+      "description": "Execute telegram message fix operations",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/telegram_message_fix.py",
+      "type": "skill",
+      "category": "n8n_automation"
+    },
+    {
+      "name": "Test Telegram Fix",
+      "title": "Test Telegram Fix",
+      "description": "Execute test telegram fix operations",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/test_telegram_fix.py",
+      "type": "skill",
+      "category": "n8n_automation"
+    },
+    {
+      "name": "Video Knowledge Loader",
+      "title": "Video Knowledge Loader",
+      "description": "Execute video knowledge loader operations",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/modules/video_knowledge_loader.py",
+      "type": "skill",
+      "category": "modules"
+    },
+    {
+      "name": "Video Knowledge Integrator",
+      "title": "Video Knowledge Integrator",
+      "description": "Execute video knowledge integrator operations",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/modules/video_knowledge_integrator.py",
+      "type": "skill",
+      "category": "modules"
+    }
+  ],
+  "agents": [
+    {
+      "name": "Python Expert",
+      "description": "Expert Python development assistance with best practices",
+      "title": "Python Expert",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Security Engineer",
+      "description": "Security auditing and vulnerability assessment",
+      "title": "Security Engineer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Frontend Architect",
+      "description": "Frontend design and React/Vue/Angular expertise",
+      "title": "Frontend Architect",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Backend Architect",
+      "description": "Backend system design and API architecture",
+      "title": "Backend Architect",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Performance Engineer",
+      "description": "Performance optimization and bottleneck analysis",
+      "title": "Performance Engineer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Quality Engineer",
+      "description": "Testing strategies and quality assurance",
+      "title": "Quality Engineer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "DevOps Architect",
+      "description": "CI/CD pipelines and infrastructure automation",
+      "title": "DevOps Architect",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "System Architect",
+      "description": "System design and architecture patterns",
+      "title": "System Architect",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Database Expert",
+      "description": "Database design and optimization",
+      "title": "Database Expert",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Cloud Architect",
+      "description": "Cloud infrastructure and deployment",
+      "title": "Cloud Architect",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Mobile Developer",
+      "description": "iOS and Android app development",
+      "title": "Mobile Developer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Data Scientist",
+      "description": "Data analysis and machine learning",
+      "title": "Data Scientist",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "AI/ML Engineer",
+      "description": "AI model development and deployment",
+      "title": "AI/ML Engineer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Blockchain Developer",
+      "description": "Blockchain and smart contract development",
+      "title": "Blockchain Developer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Game Developer",
+      "description": "Game development and engine expertise",
+      "title": "Game Developer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Embedded Systems Engineer",
+      "description": "IoT and embedded systems programming",
+      "title": "Embedded Systems Engineer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Network Engineer",
+      "description": "Network architecture and protocols",
+      "title": "Network Engineer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "UI/UX Designer",
+      "description": "User interface and experience design",
+      "title": "UI/UX Designer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Technical Writer",
+      "description": "Documentation and technical writing",
+      "title": "Technical Writer",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Project Manager",
+      "description": "Project planning and management",
+      "title": "Project Manager",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Business Analyst",
+      "description": "Business requirements and analysis",
+      "title": "Business Analyst",
+      "type": "agent",
+      "category": "AI Agents"
+    },
+    {
+      "name": "Solution Architect",
+      "description": "End-to-end solution design",
+      "title": "Solution Architect",
+      "type": "agent",
+      "category": "AI Agents"
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Video Analysis",
+      "title": "Video Analysis",
+      "description": "Complete video analysis pipeline with transcript and frame extraction",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Image Enhancement",
+      "title": "Image Enhancement",
+      "description": "AI-powered image enhancement and upscaling workflow",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Telegram Integration",
+      "title": "Telegram Integration",
+      "description": "Telegram bot message processing and response",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Content Pipeline",
+      "title": "Content Pipeline",
+      "description": "Content processing and distribution pipeline",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Data Processing",
+      "title": "Data Processing",
+      "description": "Automated data processing workflow",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Backup Automation",
+      "title": "Backup Automation",
+      "description": "Scheduled backup automation",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Monitoring Workflow",
+      "title": "Monitoring Workflow",
+      "description": "System monitoring and alerting",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Deployment Pipeline",
+      "title": "Deployment Pipeline",
+      "description": "Automated deployment pipeline",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Testing Automation",
+      "title": "Testing Automation",
+      "description": "Automated testing workflow",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Report Generation",
+      "title": "Report Generation",
+      "description": "Automated report generation",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Email Workflow",
+      "title": "Email Workflow",
+      "description": "Email processing and automation",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Social Media Posting",
+      "title": "Social Media Posting",
+      "description": "Scheduled social media posting",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Web Scraping Pipeline",
+      "title": "Web Scraping Pipeline",
+      "description": "Web scraping and data extraction",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "File Processing",
+      "title": "File Processing",
+      "description": "Batch file processing workflow",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Api Integration",
+      "title": "Api Integration",
+      "description": "API integration workflow",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Notification System",
+      "title": "Notification System",
+      "description": "Multi-channel notification system",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Sync Workflow",
+      "title": "Sync Workflow",
+      "description": "Data synchronization workflow",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Video Analyzer Workflow",
+      "title": "Video Analyzer Workflow",
+      "description": "Workflow: video analyzer workflow",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/workflows/video_analyzer_workflow.json",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Image Enhancer Batch",
+      "title": "Image Enhancer Batch",
+      "description": "Workflow: image enhancer batch",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/workflows/image_enhancer_batch.json",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Ai Agents Orchestration",
+      "title": "Ai Agents Orchestration",
+      "description": "Workflow: ai agents orchestration",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/workflows/ai_agents_orchestration.json",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Master Pipeline",
+      "title": "Master Pipeline",
+      "description": "Workflow: master pipeline",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/workflows/master_pipeline.json",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Telegram Bot Trigger",
+      "title": "Telegram Bot Trigger",
+      "description": "Workflow: telegram bot trigger",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/workflows/telegram_bot_trigger.json",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "Telegram Webhook Receiver",
+      "title": "Telegram Webhook Receiver",
+      "description": "Workflow: telegram webhook receiver",
+      "path": "/Volumes/AI_WORKSPACE/n8n_automation/workflows/telegram_webhook_receiver.json",
+      "type": "workflow",
+      "category": "Automation"
+    },
+    {
+      "name": "My-Custom-Workflow",
+      "title": "My-Custom-Workflow",
+      "description": "Workflow: my-custom-workflow",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/workflows/my-custom-workflow.json",
+      "type": "workflow",
+      "category": "Automation"
+    }
+  ],
+  "models": [
+    {
+      "name": "Claude 3 Opus",
+      "description": "Most capable Claude model for complex tasks",
+      "title": "Claude 3 Opus",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "Claude 3 Sonnet",
+      "description": "Balanced performance and speed",
+      "title": "Claude 3 Sonnet",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "Claude 3 Haiku",
+      "description": "Fast responses for simple tasks",
+      "title": "Claude 3 Haiku",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "GPT-4 Turbo",
+      "description": "OpenAI's most capable model",
+      "title": "GPT-4 Turbo",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "GPT-3.5 Turbo",
+      "description": "Fast and cost-effective",
+      "title": "GPT-3.5 Turbo",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "DALL-E 3",
+      "description": "Advanced image generation",
+      "title": "DALL-E 3",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "Whisper",
+      "description": "Speech recognition and transcription",
+      "title": "Whisper",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "Stable Diffusion XL",
+      "description": "Open-source image generation",
+      "title": "Stable Diffusion XL",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "Llama 2 70B",
+      "description": "Meta's large language model",
+      "title": "Llama 2 70B",
+      "type": "model",
+      "category": "AI Models"
+    },
+    {
+      "name": "Mistral 7B",
+      "description": "Efficient open-source model",
+      "title": "Mistral 7B",
+      "type": "model",
+      "category": "AI Models"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "Boot Jarvis Simple",
+      "title": "Boot Jarvis Simple",
+      "description": "Execute boot jarvis simple script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/boot_jarvis_simple.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Deploy Production",
+      "title": "Deploy Production",
+      "description": "Deploy to production environment",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/deploy_production.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Deploy Staging",
+      "title": "Deploy Staging",
+      "description": "Deploy to staging environment",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/deploy_staging.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Deploy Staging Simple",
+      "title": "Deploy Staging Simple",
+      "description": "Execute deploy staging simple script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/deploy_staging_simple.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Deploy V2 Production",
+      "title": "Deploy V2 Production",
+      "description": "Execute deploy v2 production script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/deploy_v2_production.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Emergency Rollback",
+      "title": "Emergency Rollback",
+      "description": "Execute emergency rollback script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/emergency_rollback.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Setup Claude Integration",
+      "title": "Setup Claude Integration",
+      "description": "Execute setup claude integration script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/setup_claude_integration.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Update Claude Context",
+      "title": "Update Claude Context",
+      "description": "Execute update claude context script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/update_claude_context.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Monitor Production",
+      "title": "Monitor Production",
+      "description": "Execute monitor production script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/monitor_production.py",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Create Mission Control Icon",
+      "title": "Create Mission Control Icon",
+      "description": "Execute create mission control icon script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/create_mission_control_icon.py",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Monitor Staging",
+      "title": "Monitor Staging",
+      "description": "Execute monitor staging script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/monitor_staging.py",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Vibe Coding Protocol",
+      "title": "Vibe Coding Protocol",
+      "description": "Execute vibe coding protocol script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis/scripts/vibe_coding_protocol.py",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Start",
+      "title": "Start",
+      "description": "Start services",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis_command_center/start.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Start V2",
+      "title": "Start V2",
+      "description": "Execute start v2 script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis_command_center/start_v2.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Start V3",
+      "title": "Start V3",
+      "description": "Execute start v3 script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis_command_center/start_v3.sh",
+      "type": "script",
+      "category": "Scripts"
+    },
+    {
+      "name": "Index Knowledge Base",
+      "title": "Index Knowledge Base",
+      "description": "Execute index knowledge base script",
+      "path": "/Volumes/AI_WORKSPACE/CORE/jarvis_command_center/scripts/index_knowledge_base.py",
+      "type": "script",
+      "category": "Scripts"
+    }
+  ]
+}

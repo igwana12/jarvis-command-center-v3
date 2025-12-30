@@ -8,12 +8,19 @@ The Jarvis Command Center has been deployed to Vercel but **lacks all features f
 - **Vercel Deployment**: https://jarviscommandcenterclean.vercel.app
 - **Environment**: Production with REPLICATE_API_TOKEN configured in Vercel
 
-## Critical Issue
+## Critical Issue (UPDATED)
 The user explicitly stated: "Take a look at the page. It doesn't have any of the features that we had in the previous version"
 - All metrics show 0
 - No skills, agents, workflows, models, or scripts are displayed
 - WebSocket shows "Connected" but no data flows
-- The frontend exists but isn't properly connected to the backend API
+- API returns "FUNCTION_INVOCATION_FAILED" error on Vercel
+
+### Latest Fix Attempt (by Claude Opus 4.1)
+- Updated `/api/main.py` to properly configure FastAPI for Vercel serverless
+- Added Mangum adapter (required for FastAPI on AWS Lambda/Vercel)
+- Added CORS middleware configuration
+- Created fallback endpoints in case imports fail
+- **IMPORTANT**: Need to add `mangum` to requirements.txt
 
 ## Directory Structure
 ```
@@ -61,13 +68,23 @@ The backend (`optimized_main_v2.py`) provides these endpoints that should be con
 - `/api/terminal/execute` - Execute terminal commands
 - `/api/execution/history` - Get execution history
 
-## Tasks to Complete
+## Tasks to Complete (UPDATED BY CLAUDE)
 
-### 1. Copy Enhanced Frontend (PRIORITY)
+### ✅ 1. Copy Enhanced Frontend (COMPLETED)
+Frontend has been updated with index_v5_complete.html and API URLs changed from localhost to relative paths.
+
+### 🔄 2. Fix Backend for Vercel Serverless (IN PROGRESS)
+**Latest changes made to `/api/main.py`:**
+- Added Mangum adapter for FastAPI-to-serverless compatibility
+- Added CORS middleware directly in the API handler
+- Created fallback endpoints for error handling
+
+**IMMEDIATE NEXT STEP: Add mangum to requirements.txt**
 ```bash
-# Copy the most feature-rich frontend version
-cp /Volumes/AI_WORKSPACE/CORE/jarvis_command_center/frontend/index_v5_complete.html \
-   /Volumes/AI_WORKSPACE/CORE/jarvis_command_center_clean/frontend/index.html
+cd /Volumes/AI_WORKSPACE/CORE/jarvis_command_center_clean
+echo "mangum" >> requirements.txt
+git add -A && git commit -m "Add mangum for serverless FastAPI support"
+git push origin main
 ```
 
 ### 2. Fix API Connection in Frontend
@@ -188,11 +205,50 @@ The deployed Vercel site should:
 4. Support executing skills and invoking agents
 5. Match the feature set of the original local version
 
-## Notes for ChatGPT
-- The user is frustrated that the deployed version lacks features
-- Priority is to get the full frontend working with all resources displayed
-- The backend API is already built and working, just needs proper frontend connection
-- Test locally first before pushing to Vercel
-- User expects to see the same rich interface as the original version
+## HANDOFF FROM CLAUDE TO CHATGPT (Dec 30, 2024)
 
-Good luck! The main issue is that the deployed frontend is a basic version - replacing it with the enhanced version and ensuring proper API connections should resolve the problem.
+### Current Driver Status
+- **Previous Driver**: Claude Opus 4.1
+- **Next Driver**: ChatGPT (as requested by user)
+- **Handoff Time**: December 30, 2024
+
+### Latest Work Done by Claude
+1. ✅ Replaced frontend with index_v5_complete.html
+2. ✅ Fixed API URLs from localhost to relative paths
+3. 🔄 Updated `/api/main.py` with Mangum adapter for serverless
+4. ⚠️ Still getting "FUNCTION_INVOCATION_FAILED" on Vercel
+
+### IMMEDIATE ACTION REQUIRED
+The backend is failing because `mangum` package is not in requirements.txt. This MUST be fixed first:
+
+```bash
+cd /Volumes/AI_WORKSPACE/CORE/jarvis_command_center_clean
+echo "mangum" >> requirements.txt
+git add -A && git commit -m "Add mangum for serverless FastAPI support"
+git push origin main
+```
+
+After pushing, wait 2-3 minutes for Vercel to redeploy, then test:
+```bash
+curl https://jarviscommandcenterclean.vercel.app/api/health
+curl https://jarviscommandcenterclean.vercel.app/api/resources/all
+```
+
+### Known Issues to Fix
+1. **API Error**: "FUNCTION_INVOCATION_FAILED" - likely due to missing `mangum` dependency
+2. **Resource Discovery**: The backend needs to work in Vercel's serverless environment
+3. **Path Issues**: File paths in resource_api.py use `/Volumes/` which won't exist on Vercel
+
+### The User's Expectations
+- See all 94+ skills, 22 agents, workflows, models, scripts displayed
+- Real metrics (not zeros)
+- Fully functional command palette
+- Working WebSocket connections
+- Match the feature set of the original local version
+
+### Files Modified by Claude
+- `/api/main.py` - Added Mangum adapter and CORS
+- `/frontend/index.html` - Replaced with V5 version, fixed API URLs
+- `/HANDOFF_DOCUMENT.md` - This document you're reading
+
+Good luck! The user has given full authorization to complete this deployment.

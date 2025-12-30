@@ -14,6 +14,26 @@ router = APIRouter(prefix="/api/resources", tags=["resources"])
 # Cache for discovered resources
 _resource_cache = None
 
+def load_static_resources() -> Dict[str, List[Dict[str, Any]]]:
+    """Load resources from static JSON file for Vercel deployment"""
+    import os
+    from pathlib import Path
+
+    # Try to load from JSON file
+    json_path = Path(__file__).parent / "resources_data.json"
+    if json_path.exists():
+        with open(json_path, 'r') as f:
+            return json.load(f)
+
+    # Fallback to empty if file doesn't exist
+    return {
+        "skills": [],
+        "agents": [],
+        "workflows": [],
+        "models": [],
+        "scripts": []
+    }
+
 def discover_all_resources() -> Dict[str, List[Dict[str, Any]]]:
     """Discover ALL resources across the entire system"""
 
@@ -298,7 +318,8 @@ async def get_all_resources():
     global _resource_cache
 
     if not _resource_cache:
-        _resource_cache = discover_all_resources()
+        # For Vercel deployment, use static JSON
+        _resource_cache = load_static_resources()
 
     # Add counts
     response = {
@@ -320,7 +341,7 @@ async def get_skills():
     """Get all skills"""
     global _resource_cache
     if not _resource_cache:
-        _resource_cache = discover_all_resources()
+        _resource_cache = load_static_resources()
     return _resource_cache["skills"]
 
 @router.get("/agents")
@@ -328,7 +349,7 @@ async def get_agents():
     """Get all agents"""
     global _resource_cache
     if not _resource_cache:
-        _resource_cache = discover_all_resources()
+        _resource_cache = load_static_resources()
     return _resource_cache["agents"]
 
 @router.get("/workflows")
@@ -336,7 +357,7 @@ async def get_workflows():
     """Get all workflows"""
     global _resource_cache
     if not _resource_cache:
-        _resource_cache = discover_all_resources()
+        _resource_cache = load_static_resources()
     return _resource_cache["workflows"]
 
 @router.get("/models")
@@ -344,7 +365,7 @@ async def get_models():
     """Get all models"""
     global _resource_cache
     if not _resource_cache:
-        _resource_cache = discover_all_resources()
+        _resource_cache = load_static_resources()
     return _resource_cache["models"]
 
 @router.get("/scripts")
@@ -352,7 +373,7 @@ async def get_scripts():
     """Get all scripts"""
     global _resource_cache
     if not _resource_cache:
-        _resource_cache = discover_all_resources()
+        _resource_cache = load_static_resources()
     return _resource_cache["scripts"]
 
 @router.get("/refresh")
