@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/main.py",
+      "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
@@ -17,7 +17,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "api/main.py"
+      "dest": "api/index.py"
     },
     {
       "src": "/(.*)",
@@ -25,7 +25,7 @@
     }
   ],
   "functions": {
-    "api/main.py": {
+    "api/index.py": {
       "maxDuration": 30,
       "memory": 1024
     }
