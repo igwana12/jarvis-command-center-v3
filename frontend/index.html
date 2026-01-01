@@ -1189,6 +1189,42 @@
             terminal.writeln('\x1b[36m→ Select a resource to begin\x1b[0m');
         }
 
+        // Process resources data and update UI
+        function processResourcesData(data) {
+            if (data && data.resources) {
+                resources = data.resources;
+
+                // Update counts
+                document.getElementById('skills-count').textContent = resources.skills?.length || 0;
+                document.getElementById('agents-count').textContent = resources.agents?.length || 0;
+                document.getElementById('workflows-count').textContent = resources.workflows?.length || 0;
+                document.getElementById('models-count').textContent = resources.models?.length || 0;
+                document.getElementById('scripts-count').textContent = resources.scripts?.length || 0;
+
+                // Calculate total
+                const total = (resources.skills?.length || 0) +
+                            (resources.agents?.length || 0) +
+                            (resources.workflows?.length || 0) +
+                            (resources.models?.length || 0) +
+                            (resources.scripts?.length || 0);
+
+                // Display current tab resources
+                displayResources(currentTab);
+
+                // Update connection status
+                document.getElementById('connection-status').textContent = 'Connected - ' + total + ' resources loaded';
+
+                console.log('Resources loaded successfully:', {
+                    skills: resources.skills?.length || 0,
+                    agents: resources.agents?.length || 0,
+                    workflows: resources.workflows?.length || 0,
+                    models: resources.models?.length || 0,
+                    scripts: resources.scripts?.length || 0,
+                    total: total
+                });
+            }
+        }
+
         // Load resources from API
         async function loadResources() {
             // First try to use embedded resources
@@ -1197,27 +1233,14 @@
                 processResourcesData({resources: EMBEDDED_RESOURCES});
                 return;
             }
-            
+
             // Fall back to API if embedded resources not available
             try {
                 const response = await fetch('/api/resources/all');
                 const data = await response.json();
 
                 if (data.resources) {
-                    resources = data.resources;
-
-                    // Update counts
-                    document.getElementById('skills-count').textContent = resources.skills?.length || 0;
-                    document.getElementById('agents-count').textContent = resources.agents?.length || 0;
-                    document.getElementById('workflows-count').textContent = resources.workflows?.length || 0;
-                    document.getElementById('models-count').textContent = resources.models?.length || 0;
-                    document.getElementById('scripts-count').textContent = resources.scripts?.length || 0;
-
-                    // Display current tab resources
-                    displayResources(currentTab);
-
-                    // Update connection status
-                    document.getElementById('connection-status').textContent = 'Connected - ' + (data.counts?.total || 0) + ' resources loaded';
+                    processResourcesData(data);
                 }
             } catch (error) {
                 console.error('Failed to load resources:', error);
