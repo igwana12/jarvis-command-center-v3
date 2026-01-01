@@ -1171,22 +1171,32 @@
 
         // Initialize Terminal
         function initializeTerminal() {
-            const term = new Terminal({
-                theme: {
-                    background: '#000000',
-                    foreground: '#00ff00'
-                },
-                fontSize: 14,
-                fontFamily: 'Consolas, "Courier New", monospace'
-            });
+            try {
+                if (typeof Terminal === 'undefined') {
+                    console.warn('XTerm.js not loaded, skipping terminal initialization');
+                    return;
+                }
 
-            const outputElement = document.getElementById('output-terminal');
-            outputElement.innerHTML = '';
-            term.open(outputElement);
-            terminal = term;
+                const term = new Terminal({
+                    theme: {
+                        background: '#000000',
+                        foreground: '#00ff00'
+                    },
+                    fontSize: 14,
+                    fontFamily: 'Consolas, "Courier New", monospace'
+                });
 
-            terminal.writeln('\x1b[32m✓ Jarvis Command Center Initialized\x1b[0m');
-            terminal.writeln('\x1b[36m→ Select a resource to begin\x1b[0m');
+                const outputElement = document.getElementById('output-terminal');
+                outputElement.innerHTML = '';
+                term.open(outputElement);
+                terminal = term;
+
+                terminal.writeln('\x1b[32m✓ Jarvis Command Center Initialized\x1b[0m');
+                terminal.writeln('\x1b[36m→ Select a resource to begin\x1b[0m');
+            } catch (error) {
+                console.error('Failed to initialize terminal:', error);
+                // Continue without terminal - resources will still load
+            }
         }
 
         // Process resources data and update UI
